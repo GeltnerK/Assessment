@@ -22,6 +22,8 @@ public class Player : MonoBehaviour
 
     public float Speed; //Player's Speed
 
+    public Animator animator;
+
     private Vector2 moveDirection;
     
     // Start is called before the first frame update
@@ -49,11 +51,15 @@ public class Player : MonoBehaviour
         float moveY = Input.GetAxisRaw("Vertical");
 
         moveDirection = new Vector2(moveX, moveY);
+
+        animator.SetFloat("Horizontal", moveDirection.x);
+        animator.SetFloat("Vertical", moveDirection.y);
+        animator.SetFloat("Speed", moveDirection.sqrMagnitude);
     }
 
     void Move()
     {
-        rb.velocity = new Vector2(moveDirection.x * Speed, moveDirection.y * Speed);
+        rb.MovePosition(rb.position + moveDirection * Speed * Time.fixedDeltaTime);
     }
 
 }
