@@ -18,16 +18,44 @@ public class Player : MonoBehaviour
 
     private GameManager myGameManager; //A reference to the GameManager in the scene.
 
+    public Rigidbody2D rb; //Player rigid body Reference
+
+    public float Speed; //Player's Speed
+
+    private Vector2 moveDirection;
+    
     // Start is called before the first frame update
     void Start()
     {
-       
+        playerTotalLives = 3;
+        playerLivesRemaining = 3;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-       
+        ProcessInputs();   
+    }
+
+    private void FixedUpdate()
+    {
+        Move();
+    }
+
+    void ProcessInputs()
+    {
+        float moveX = Input.GetAxisRaw("Horizontal");
+        float moveY = Input.GetAxisRaw("Vertical");
+
+        moveDirection = new Vector2(moveX, moveY);
+    }
+
+    void Move()
+    {
+        rb.velocity = new Vector2(moveDirection.x * Speed, moveDirection.y * Speed);
     }
 
 }
+
+
