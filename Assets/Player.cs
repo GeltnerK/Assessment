@@ -15,8 +15,10 @@ public class Player : MonoBehaviour
    
     public bool playerIsAlive = true; //Is the player currently alive?
     public bool playerCanMove = false; //Can the player currently move?
+    public bool isInWater = false; // is the player in the wazter?
+    public bool isOnPlatform = false; //is the player on a platform?
 
-    public float moveSpeed; //Player's speed
+    public float moveSpeed = 3; //Player's speed
     public bool isWalking;
 
     private Animator anim;
@@ -28,6 +30,7 @@ public class Player : MonoBehaviour
     public AudioClip backgroundMusic;
 
     public Sprite deadSprite; //Reference to dead sprite
+    public Sprite winSprite; //reference to winning sprite
 
     public List<string> highScores = new List<string>(); //Reference to HighScores
 
@@ -88,11 +91,39 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void OnTriggerEnter2D(Collider2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.transform.GetComponent<Vehicle>() != null)
+        if(playerIsAlive == true)
         {
-            KillPlayer();
+            if (collision.transform.GetComponent<Vehicle>() != null)
+            {
+                GetComponent<AudioSource>().PlayOneShot(deathNoise);
+                KillPlayer();
+            }
+
+            else if (collision.transform.GetComponent<Platform>() != null)
+            {
+                transform.SetParent(collision.transform);
+                isOnPlatform = true;
+            }
+            
+            else if (collision.transform.tag == "Water")
+            {
+                isInWater = true;
+            }
+        }
+        
+    }
+
+    void OnTriggerExit2D(Collider2D collision)
+    {
+        if (playerIsAlive == true)
+        {
+            if (collision.transform.GetComponent<Platform>() != null)
+            {
+                transform.SetParent(null);
+                isOnPlatform = false;
+            }
         }
     }
 
@@ -100,5 +131,13 @@ public class Player : MonoBehaviour
     {
         playerIsAlive = false;
         playerCanMove = false;
+        isWalking = false;
+        
+    }
+
+    void Coin()
+    {
+
     }
 }
+
