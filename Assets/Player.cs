@@ -106,38 +106,37 @@ public class Player : MonoBehaviour
         }
     }
 
-    void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        if(playerIsAlive == true)
+        if (playerIsAlive == true)
         {
-            if (collision.transform.GetComponent<Vehicle>() != null)
-            {
-                GetComponent<AudioSource>().PlayOneShot(deathNoise);
-                KillPlayer();
-            }
 
+        
+            if(collision.transform.GetComponent<Vehicle>() != null)
+            {
+                KillPlayer();
+                print("hit");
+            }
             else if (collision.transform.GetComponent<Platform>() != null)
             {
                 transform.SetParent(collision.transform);
                 isOnPlatform = true;
             }
-
-            //else if (collision.transform.tag == "Coin")
-            //{
-            //    myGameManager.UpdateScore(1000);
-            //    playerCanMove = false;
-            //    myGameManager.GameOver(true);
-            //}
-
-            else if (collision.transform.tag == "Water")
+            else if (collision.transform.tag == "Coin")
             {
+                playerCanMove = false;
+
+            }
+            else if (collision.transform.tag == "Water")
+             {
                 isInWater = true;
                 GetComponent<AudioSource>().PlayOneShot(drownNoise);
-                
+
             }
         }
-        
     }
+
+        
 
     void OnTriggerExit2D(Collider2D collision)
     {

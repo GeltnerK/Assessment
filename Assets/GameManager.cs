@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 /// <summary>
 /// This script is to be attached to a GameObject called GameManager in the scene. It is to be used to manager the settings and overarching gameplay loop.
@@ -35,4 +36,13 @@ public class GameManager : MonoBehaviour
         
     }
 
+    public void PlayGame()
+    {
+        SceneManager.LoadScene(1); //loads frogger game
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit(); //quits game
+    }
 }

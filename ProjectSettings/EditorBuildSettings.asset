@@ -4,5 +4,14 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/Main Menu.unity
+    guid: 0a4edcca300263841a959f92cf0c0bce
+  - enabled: 0
+    path: Assets/Scenes/FroggerExampleScene.unity
+    guid: a6cefe9d80d3a5d4484a4e159f360d31
+  - enabled: 1
+    path: Assets/Scenes/Frogger.unity
+    guid: bf0edcb80eb94c240a0bc67782cad7cc
   m_configObjects: {}
