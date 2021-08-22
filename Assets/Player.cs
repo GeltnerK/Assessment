@@ -16,52 +16,89 @@ public class Player : MonoBehaviour
     public bool playerIsAlive = true; //Is the player currently alive?
     public bool playerCanMove = false; //Can the player currently move?
 
+    public float moveSpeed; //Player's speed
+    public bool isWalking;
+
+    private Animator anim;
+    private float x, y;
+
+    public AudioSource myAudioSourse;
+    public AudioClip coinPickup;
+    public AudioClip deathNoise; // Audio Clips
+    public AudioClip backgroundMusic;
+
+    public Sprite deadSprite; //Reference to dead sprite
+
+    public List<string> highScores = new List<string>(); //Reference to HighScores
+
+    public Rigidbody2D rb; //Reference to rigidbody
+
     private GameManager myGameManager; //A reference to the GameManager in the scene.
 
-    public Rigidbody2D rb; //Player rigid body Reference
-
-    public float Speed; //Player's Speed
-
-    public Animator animator;
-
-    private Vector2 moveDirection;
-    
     // Start is called before the first frame update
     void Start()
     {
-        playerTotalLives = 3;
+        myGameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+
         playerLivesRemaining = 3;
-        
+        playerTotalLives = 3;
+
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        ProcessInputs();   
+        if (playerIsAlive == true)
+        {
+            x = Input.GetAxis("Horizontal");
+            y = Input.GetAxis("Vertical");
+
+            if (x != 0 || y != 0)
+            {
+                if (!isWalking)
+                {
+                    isWalking = true;
+                    anim.SetBool("isWalking", isWalking);
+                }
+
+                Move();
+            }
+            else
+            {
+                if (isWalking)
+                {
+                    isWalking = false;
+                    anim.SetBool("isWalking", isWalking);
+                }
+            }
+        }
     }
 
-    private void FixedUpdate()
+    private void Move()
     {
-        Move();
+        if (playerIsAlive == true)
+        {
+
+
+            anim.SetFloat("x", x);
+            anim.SetFloat("y", y);
+
+            transform.Translate(x * Time.deltaTime * moveSpeed, y * Time.deltaTime * moveSpeed, 0);
+        }
     }
 
-    void ProcessInputs()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        float moveX = Input.GetAxisRaw("Horizontal");
-        float moveY = Input.GetAxisRaw("Vertical");
-
-        moveDirection = new Vector2(moveX, moveY);
-
-        animator.SetFloat("Horizontal", moveDirection.x);
-        animator.SetFloat("Vertical", moveDirection.y);
-        animator.SetFloat("Speed", moveDirection.sqrMagnitude);
+        if (collision.transform.GetComponent<Vehicle>() != null)
+        {
+            KillPlayer();
+        }
     }
 
-    void Move()
+    void KillPlayer()
     {
-        rb.MovePosition(rb.position + moveDirection * Speed * Time.fixedDeltaTime);
+        playerIsAlive = false;
+        playerCanMove = false;
     }
-
 }
-
-
