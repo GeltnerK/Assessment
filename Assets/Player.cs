@@ -40,6 +40,8 @@ public class Player : MonoBehaviour
 
     private GameManager myGameManager; //A reference to the GameManager in the scene.
 
+    private 
+
     // Start is called before the first frame update
     void Start()
     {
@@ -159,7 +161,14 @@ public class Player : MonoBehaviour
         playerIsAlive = false;
         playerCanMove = false;
         isWalking = false;
-        GetComponent<SpriteRenderer>().sprite = deadSprite;
+        
+
+
+        if (playerIsAlive != true)
+        {
+            UIManager.GameOver(false);
+        }
+
     }
 
     void Coin()
