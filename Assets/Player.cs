@@ -15,6 +15,7 @@ public class Player : MonoBehaviour
    
     public bool playerIsAlive = true; //Is the player currently alive?
     public bool playerCanMove = false; //Can the player currently move?
+
     public bool isInWater = false; // is the player in the wazter?
     public bool isOnPlatform = false; //is the player on a platform?
 
@@ -26,13 +27,14 @@ public class Player : MonoBehaviour
 
     public AudioSource myAudioSourse;
     public AudioClip coinPickup;
-    public AudioClip deathNoise; // Audio Clips
+    public AudioClip deathNoise;
+    public AudioClip drownNoise;// Audio Clips
     public AudioClip backgroundMusic;
 
     public Sprite deadSprite; //Reference to dead sprite
     public Sprite winSprite; //reference to winning sprite
 
-    public List<string> highScores = new List<string>(); //Reference to HighScores
+    public List<string> highScores = new List<string>(); //reference to high score
 
     public Rigidbody2D rb; //Reference to rigidbody
 
@@ -78,6 +80,19 @@ public class Player : MonoBehaviour
         }
     }
 
+    void LateUpdate()
+    {
+        if(playerIsAlive == true)
+        {
+            if (isInWater == true && isOnPlatform == false)
+                {
+                    KillPlayer();
+                }
+        }
+
+        
+    }
+
     private void Move()
     {
         if (playerIsAlive == true)
@@ -106,10 +121,19 @@ public class Player : MonoBehaviour
                 transform.SetParent(collision.transform);
                 isOnPlatform = true;
             }
-            
+
+            //else if (collision.transform.tag == "Coin")
+            //{
+            //    myGameManager.UpdateScore(1000);
+            //    playerCanMove = false;
+            //    myGameManager.GameOver(true);
+            //}
+
             else if (collision.transform.tag == "Water")
             {
                 isInWater = true;
+                GetComponent<AudioSource>().PlayOneShot(drownNoise);
+                
             }
         }
         
@@ -124,6 +148,10 @@ public class Player : MonoBehaviour
                 transform.SetParent(null);
                 isOnPlatform = false;
             }
+            else if (collision.transform.tag == "Water")
+            {
+                isInWater = false;
+            }
         }
     }
 
@@ -132,7 +160,7 @@ public class Player : MonoBehaviour
         playerIsAlive = false;
         playerCanMove = false;
         isWalking = false;
-        
+        GetComponent<SpriteRenderer>().sprite = deadSprite;
     }
 
     void Coin()
